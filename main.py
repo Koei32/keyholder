@@ -1,44 +1,33 @@
-from functions import *
+from dataproc import *
+from password_mgt import *
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from rich import print
+from pathlib import Path
 import os
-import base64
-import hashlib
-from string import ascii_letters
-import secrets
+
+
+datafile = Path("./data.dt")
 
 # PLEASE CLEAN THIS UP
 def main():
-    salt = b'c2lua3BhZ2Vjb21wbGV4aQ=='
-    data = load_data()
-    master = input("password").encode()
-    kdf = PBKDF2HMAC(hashes.SHA256(), length=32, salt=salt, iterations=1_200_000)
-    key = base64.urlsafe_b64encode(kdf.derive(master))
+    if not datafile.is_file():
+        # if we are here, this is the first run of the program
+        print("Welcome to [bold violet]Keyholder[/bold violet]. This is your first boot of the app. Set a [bold]master password[/bold] to continue.\n")
+        print("Please make sure that the password you select is strong, unique and memorable.")
+        print("!! [bold red]If you forget the master password, there is NO way to retrieve your stored passwords.[/bold red] !!")
+        pwd = getpass()
+        set_master_password(pwd)
 
-    data = decrypt_data(bytes(data), key)
-    print(data[0])
-    print(data[1])
-    print(data[2])
-    # return
-    master = b"this"
-    kdf = PBKDF2HMAC(hashes.SHA256(), length=32, salt=salt, iterations=1_200_000)
-    key = base64.urlsafe_b64encode(kdf.derive(master))
-    master = None
-    for id in range(2):
-        test(id)
-    data = encrypt_data((titles, hash, comments), key)
-    write_data(data)
-    data = None
-    data = load_data()
-    master = input("password").encode()
-    kdf = PBKDF2HMAC(hashes.SHA256(), length=32, salt=salt, iterations=1_200_000)
-    key = base64.urlsafe_b64encode(kdf.derive(master))
 
-    data = decrypt_data(bytes(data), key)
-    print(data[0])
-    print(data[1])
-    print(data[2])
 
+
+    # salt = b'c2lua3BhZ2Vjb21wbGV4aQ=='
+    # data = load_data()
+    # master = input("password: ").encode()
+    # kdf = PBKDF2HMAC(hashes.SHA256(), length=32, salt=salt, iterations=1_200_000)
+    # key = base64.urlsafe_b64encode(kdf.derive(master))
+    # data = decrypt_data(bytes(data), key)
 
 def test(id):
     t = input("Title: ")

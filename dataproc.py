@@ -1,11 +1,5 @@
-from getpass import getpass
 import pickle
 from cryptography.fernet import Fernet
-
-def get_password():
-    pwd = getpass("Password: ")
-    return pwd
-
 
 def load_data() -> tuple:
     #load all dicts from data file(s)
