@@ -2,26 +2,13 @@ from dataproc import *
 from password_mgt import *
 from rich import print
 from pathlib import Path
-import time
-import os
+from commands import first_boot
 
+pwd_file = Path("./pwd.dat")
+data_file = Path("./data.dat")
 
-datafile = Path("./pwd.dat")
-
-# PLEASE CLEAN THIS UP
 def main():
-    if not datafile.is_file():
-        # if we are here, this is the first run of the program
-        print("\nWelcome to [bold violet]Keyholder[/bold violet]. This is your first boot of the app. Set a [bold]master password[/bold] to continue.\n")
-        time.sleep(0.5)
-        print("\nYou will be using this password to access all of your other stored passwords.")
-        time.sleep(2)
-        print("Please make sure that the password you select is strong, unique and memorable.")
-        time.sleep(2)
-        print("!! [bold red]If you forget the master password, there is NO way to retrieve your stored passwords.[/bold red] !!")
-        time.sleep(2)
-        set_master_password()
-        quit()
+    
     
     # normal program loop here
     pwd = getpass()
@@ -44,8 +31,15 @@ def test(id):
     c = input("Comments: ")
     titles[id], hash[id], comments[id] = t, p, c
 
+
+
 if __name__ == "__main__":
     titles, hash, comments = dict(), dict(), dict()
+    
+    if not pwd_file.is_file() and not data_file.is_file():
+        # if we are here, this is the first run of the program
+        first_boot()
+    
     try:
         while True:
             main()

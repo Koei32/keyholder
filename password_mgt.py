@@ -5,7 +5,6 @@ from hashlib import pbkdf2_hmac, sha256
 from string import printable
 from rich import print
 from secrets import compare_digest
-import rich
 
 valid_chars = printable[:-6]
 
@@ -70,3 +69,6 @@ def check_password_validity(pwd:str) -> int:
         if chr not in valid_chars:
             return 2
     return 0
+
+
+
