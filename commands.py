@@ -7,6 +7,16 @@
 from password_mgt import *
 import time
 from rich import print
+from getpass import getpass
+from password_mgt import check_password_validity, get_password, get_title
+
+def new_password():
+    title = get_title()
+    pwd = get_password("Enter new password: ")
+    note = input("Notes (optional): ")
+
+    
+
 
 
 def first_boot():
