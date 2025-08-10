@@ -1,23 +1,32 @@
 from dataproc import *
 from password_mgt import *
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from rich import print
 from pathlib import Path
+import time
 import os
 
 
-datafile = Path("./data.dt")
+datafile = Path("./pwd.dat")
 
 # PLEASE CLEAN THIS UP
 def main():
     if not datafile.is_file():
         # if we are here, this is the first run of the program
-        print("Welcome to [bold violet]Keyholder[/bold violet]. This is your first boot of the app. Set a [bold]master password[/bold] to continue.\n")
+        print("\nWelcome to [bold violet]Keyholder[/bold violet]. This is your first boot of the app. Set a [bold]master password[/bold] to continue.\n")
+        time.sleep(0.5)
+        print("\nYou will be using this password to access all of your other stored passwords.")
+        time.sleep(2)
         print("Please make sure that the password you select is strong, unique and memorable.")
+        time.sleep(2)
         print("!! [bold red]If you forget the master password, there is NO way to retrieve your stored passwords.[/bold red] !!")
-        pwd = getpass()
-        set_master_password(pwd)
+        time.sleep(2)
+        set_master_password()
+        quit()
+    
+    # normal program loop here
+    pwd = getpass()
+    print(auth(pwd))
+    
 
 
 
@@ -31,11 +40,15 @@ def main():
 
 def test(id):
     t = input("Title: ")
-    p = get_password()
+    p = getpass()
     c = input("Comments: ")
     titles[id], hash[id], comments[id] = t, p, c
 
 if __name__ == "__main__":
     titles, hash, comments = dict(), dict(), dict()
-    main()
+    try:
+        while True:
+            main()
+    except KeyboardInterrupt:
+        print("Quitting...")
 
