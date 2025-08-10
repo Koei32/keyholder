@@ -8,6 +8,7 @@ from secrets import compare_digest
 
 valid_chars = printable[:-6]
 
+
 def set_master_password():
     """
     Performs the whole procedure of setting a new master password.
@@ -24,21 +25,22 @@ def set_master_password():
             return
         case 0:
             pass
-    
+
     cf_pwd = getpass("Confirm master password: ")
 
     if pwd != cf_pwd:
         print("[bold red] Passwords do not match! [/bold red]")
         set_master_password()
-    
+
     sha = sha256()
     salt = os.urandom(16)
-    sha.update(pwd.encode()+salt)
+    sha.update(pwd.encode() + salt)
     final_hash = sha.hexdigest()
     pwd_data = [final_hash, salt]
     with open("pwd.dat", "wb") as f:
         pickle.dump(pwd_data, f)
     print("Master key set.")
+
 
 def auth(pwd: str) -> bool:
     """
@@ -50,11 +52,12 @@ def auth(pwd: str) -> bool:
     with open("pwd.dat", "rb") as f:
         pwd_data = pickle.load(f)
     sha = sha256()
-    sha.update(pwd.encode()+pwd_data[1])
+    sha.update(pwd.encode() + pwd_data[1])
     pwd_hash = sha.hexdigest()
     return compare_digest(pwd_data[0], pwd_hash)
 
-def check_password_validity(pwd:str) -> int:
+
+def check_password_validity(pwd: str) -> int:
     """
     Checks validity of password string `pwd`.
 
@@ -69,6 +72,3 @@ def check_password_validity(pwd:str) -> int:
         if chr not in valid_chars:
             return 2
     return 0
-
-
-
