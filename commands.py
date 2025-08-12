@@ -6,17 +6,46 @@
 
 from password_mgt import *
 import time
-from rich import print
-from getpass import getpass
-from password_mgt import check_password_validity, get_password, get_title
+from console import print
+from rich import table
+from password_mgt import get_password, get_title
+from dataproc import *
+
 
 def new_password():
-    title = get_title()
-    pwd = get_password("Enter new password: ")
-    note = input("Notes (optional): ")
+    try:
+        title = get_title()
+        pwd = get_password("Enter new password: ", confirm=True)
+        notes = input("Notes (optional): ")
 
-    
+        master_pwd = get_password("Enter your master password: ")
+        while not auth(master_pwd):
+            print("Password is wrong! Try again.")
+            master_pwd = get_password("Enter your master password: ")
 
+        with open("./data.dat", "rb") as f:
+            if len(f.read()) == 0:
+                # this is the first password to be stored
+                id = 1
+                password_obj = {id: (title, pwd, notes)}
+                new_pwd_data = encrypt_data(password_obj, master_pwd)
+            else:
+                stored_data = decrypt_data(load_data(), master_pwd)
+                id = list(stored_data.keys())[-1] + 1
+                password_obj = {id: (title, pwd, notes)}
+                stored_data.update(password_obj)
+                new_pwd_data = encrypt_data(stored_data, master_pwd)
+        write_data(new_pwd_data)
+    except KeyboardInterrupt:
+        print("Cancelled new password creation.")
+
+def view():
+    master_pwd = get_password("Master password: ")
+    if auth(master_pwd):
+        pwd_data = decrypt_data(load_data(), master_pwd)
+        print(pwd_data)
+    else:
+        print("")
 
 
 def first_boot():
@@ -37,4 +66,9 @@ def first_boot():
     )
     time.sleep(2)
     set_master_password()
-    quit()
+    datafile = open("./data.dat", "w").close()
+
+CMD_LIST = {
+    "new": new_password,
+    "view": view,
+}

@@ -1,8 +1,8 @@
 from dataproc import *
 from password_mgt import *
-from rich import print
+from console import print
 from pathlib import Path
-from commands import first_boot
+from commands import first_boot, CMD_LIST
 
 pwd_file = Path("./pwd.dat")
 data_file = Path("./data.dat")
@@ -11,8 +11,9 @@ data_file = Path("./data.dat")
 def main():
 
     # normal program loop here
-    pwd = getpass()
-    print(auth(pwd))
+    cmd = input("> ")
+    if cmd in CMD_LIST:
+        CMD_LIST[cmd]()
 
     # salt = b'c2lua3BhZ2Vjb21wbGV4aQ=='
     # data = load_data()
@@ -26,11 +27,12 @@ def test(id):
     t = input("Title: ")
     p = getpass()
     c = input("Comments: ")
-    titles[id], hash[id], comments[id] = t, p, c
+    # titles[id], hash[id], comments[id] = t, p, c
 
 
 if __name__ == "__main__":
-    titles, hash, comments = dict(), dict(), dict()
+    os.system("cls || clear")
+    pwd_data = {}
 
     if not pwd_file.is_file() and not data_file.is_file():
         # if we are here, this is the first run of the program

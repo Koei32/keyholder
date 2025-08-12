@@ -3,35 +3,40 @@ import os
 import pickle
 from hashlib import sha256
 from string import printable
-from rich import print
+from console import print
 from secrets import compare_digest
 
 valid_chars = printable[:-6]
 
 def get_title() -> str:
     title = input("Title: ")
-    if title is None:
+    if len(title) == 0:
         print("Title cannot be empty!")
         return get_title()
     return title
 
 
-def get_password(prompt: str) -> str:
+def get_password(prompt: str, check_validity: bool = False, confirm: bool = False) -> str:
     pwd = getpass(prompt)
-    match check_password_validity(pwd):
-        case 1:
-            print("Please choose a password that is atleast 8 characters long.")
-            return get_password(prompt)
-        case 2:
-            print("Password cannot contain whitespaces or non-ascii characters.")
-            return get_password(prompt)
-        case 0:
-            pass
 
-    cf_pwd = getpass("Confirm password: ")
-    if pwd != cf_pwd:
-        print("[bold red] Passwords do not match! [/bold red]")
-        return get_password(prompt)
+    if check_validity:
+        match check_password_validity(pwd):
+            case 1:
+                print("Please choose a password that is atleast 8 characters long.")
+                return get_password(prompt, check_validity, confirm)
+            case 2:
+                print("Password cannot contain whitespaces or non-ascii characters.")
+                return get_password(prompt, check_validity, confirm)
+            case 0:
+                pass
+    
+    if confirm:
+        cf_pwd = getpass("Confirm password: ")
+        if pwd != cf_pwd:
+            print("[bold red] Passwords do not match! [/bold red]")
+            return get_password(prompt, check_validity, confirm)
+        else:
+            return pwd
     else:
         return pwd
 
@@ -66,7 +71,7 @@ def set_master_password():
     pwd_data = [final_hash, salt]
     with open("pwd.dat", "wb") as f:
         pickle.dump(pwd_data, f)
-    print("Master key set.")
+    print("[bold green]Master key set![/bold green]")
 
 
 def auth(pwd: str) -> bool:
