@@ -2,7 +2,7 @@ from dataproc import *
 from password_mgt import *
 from console import print
 from pathlib import Path
-from commands import first_boot, CMD_LIST
+from commands import first_boot, CMD_LIST, showhelp
 
 pwd_file = Path("./pwd.dat")
 data_file = Path("./data.dat")
@@ -37,7 +37,7 @@ if __name__ == "__main__":
     if not pwd_file.is_file() and not data_file.is_file():
         # if we are here, this is the first run of the program
         first_boot()
-
+    showhelp()
     try:
         while True:
             main()

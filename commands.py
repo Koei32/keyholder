@@ -68,7 +68,17 @@ def first_boot():
     set_master_password()
     datafile = open("./data.dat", "w").close()
 
+
+def showhelp():
+    print("""
+Here are the available commands:
+1. new  : store a new password
+2. view : view your stored passwords (this is barebones and insecure for now)
+3. help : view this help message
+""")
+
 CMD_LIST = {
     "new": new_password,
     "view": view,
+    "help": showhelp
 }
