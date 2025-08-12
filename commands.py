@@ -1,4 +1,3 @@
-# list - lists stored passwords
 # view - view a password
 # new - create a new password
 # edit -
@@ -7,10 +6,10 @@
 from password_mgt import *
 import time
 from console import print
-from rich import table
+from rich.table import Table
 from password_mgt import get_password, get_title
 from dataproc import *
-
+from rich import box
 
 def new_password():
     try:
@@ -39,13 +38,22 @@ def new_password():
     except KeyboardInterrupt:
         print("Cancelled new password creation.")
 
-def view():
+def list_passwords():
     master_pwd = get_password("Master password: ")
-    if auth(master_pwd):
-        pwd_data = decrypt_data(load_data(), master_pwd)
-        print(pwd_data)
-    else:
-        print("")
+    if not auth(master_pwd):
+        print("Invalid password")
+        return
+    pwd_data = decrypt_data(load_data(), master_pwd)
+    table = Table(title="Stored passwords")
+    table.add_column("id", style="white")
+    table.add_column("title", style="cyan")
+    table.add_column("password", style="green italic")
+    table.add_column("notes", style="white")
+
+    for i in range(len(pwd_data)):
+        # lord forgive me
+        table.add_row(str(list(pwd_data.keys())[i])+".", list(pwd_data.values())[i][0], "hidden", list(pwd_data.values())[i][2])
+    print(table)
 
 
 def first_boot():
@@ -70,15 +78,34 @@ def first_boot():
 
 
 def showhelp():
-    print("""
-Here are the available commands:
-1. new  : store a new password
-2. view : view your stored passwords (this is barebones and insecure for now)
-3. help : view this help message
-""")
+    print("\nHere are the available commands:")
+    table = Table(box=box.MINIMAL_DOUBLE_HEAD, show_lines=True)
+    table.add_column("command")
+    table.add_column("description")
+    for x in range(len(CMD_HELP)):
+        table.add_row(list(CMD_HELP.keys())[x], list(CMD_HELP.values())[x])
+    print(table)
+        
+
+# 1. new  : store a new password
+# 2. view : view your stored passwords (this is barebones and insecure for now)
+# 3. help : view this help message
+
+# CMD_HELP = [
+#     "new : Store a new password. Asks for a title (e.g. name of a site or service), password and optional notes.",
+#     "list : Lists stored passwords. Doesnt display the actual password. (see '[bold]view[/bold]') ",
+#     "view <id/title> : View a password in plaintext using its id or title. (e.g. view 3 or view )",
+#     "help : Displays this help message."
+# ]
+CMD_HELP = {
+    "new" : "Store a new password. Asks for a title (e.g. name of a site or service), password and optional notes.",
+    "list" : "Lists stored passwords. Doesnt display the actual password. (see '[bold]view[/bold]') ",
+    "view <id/title>" : "View a password in plaintext using its id or title. (e.g. view 3 or view )",
+    "help" : "Displays this help message."
+}
 
 CMD_LIST = {
     "new": new_password,
-    "view": view,
+    "list": list_passwords,
     "help": showhelp
 }

@@ -11,16 +11,12 @@ data_file = Path("./data.dat")
 def main():
 
     # normal program loop here
-    cmd = input("> ")
+    cmd = input("> ").lower().lstrip().rstrip()
     if cmd in CMD_LIST:
         CMD_LIST[cmd]()
+    else:
+        print('Unknown command (type "help" for a list of commands)')
 
-    # salt = b'c2lua3BhZ2Vjb21wbGV4aQ=='
-    # data = load_data()
-    # master = input("password: ").encode()
-    # kdf = PBKDF2HMAC(hashes.SHA256(), length=32, salt=salt, iterations=1_200_000)
-    # key = base64.urlsafe_b64encode(kdf.derive(master))
-    # data = decrypt_data(bytes(data), key)
 
 
 def test(id):
