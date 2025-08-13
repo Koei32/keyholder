@@ -5,6 +5,12 @@ from hashlib import sha256
 from string import printable
 from console import print
 from secrets import compare_digest
+from pathlib import Path
+
+
+PWD_FILE = Path("./pwd.dat")
+DATA_FILE = Path("./data.dat")
+
 
 valid_chars = printable[:-6]
 

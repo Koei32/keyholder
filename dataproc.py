@@ -1,20 +1,23 @@
 import pickle
 from cryptography.fernet import Fernet
 from hashlib import pbkdf2_hmac
-from base64 import urlsafe_b64encode, urlsafe_b64decode, encode, decode
-import base64
+from base64 import urlsafe_b64encode
+from password_mgt import PWD_FILE, DATA_FILE
 
 
 def load_data() -> bytes:
     # load all dicts from data file(s)
-    with open("./data.dat", "+rb") as f:
+    with open(DATA_FILE, "+rb") as f:
         pdata = f.read()
     return pdata
-
+import string
+string.punctuation
 
 def write_data(data: bytes):
-    # writes `data` to datafile
-    with open("./data.dat", "+wb") as f:
+    """
+    writes `data` to datafile
+    """
+    with open(DATA_FILE, "+wb") as f:
         f.write(data)
 
 
@@ -24,7 +27,7 @@ def decrypt_data(data: bytes, master_pwd: str) -> dict:
     ### Returns:
     `bytes` object containing decrypted data.
     """
-    with open("pwd.dat", "rb") as f:
+    with open(PWD_FILE, "rb") as f:
         master_key = pbkdf2_hmac(
             "sha256", master_pwd.encode(), pickle.load(f)[1], 1_200_000
         )
@@ -40,7 +43,7 @@ def encrypt_data(data: dict, master_pwd: str) -> bytes:
     `bytes` object containing encrypted data.
     """
 
-    with open("./pwd.dat", "rb") as f:
+    with open(PWD_FILE, "rb") as f:
         master_key = pbkdf2_hmac(
             "sha256", master_pwd.encode(), pickle.load(f)[1], 1_200_000
         )

@@ -10,6 +10,22 @@ from rich.table import Table
 from password_mgt import get_password, get_title
 from dataproc import *
 from rich import box
+import random
+from string import ascii_letters, digits, punctuation
+elements = ascii_letters + digits + punctuation
+
+def random_password(size):
+    password = ""
+
+    try:
+        size = int(size)
+    except ValueError:
+        print("Please provide an int value.")
+        return
+
+    for i in range(size):
+        password += random.choice(elements)
+    print(password)
 
 
 def new_password():
@@ -23,7 +39,7 @@ def new_password():
             print("Password is wrong! Try again.")
             master_pwd = get_password("Enter your master password: ")
 
-        with open("./data.dat", "rb") as f:
+        with open(DATA_FILE, "rb") as f:
             if len(f.read()) == 0:
                 # this is the first password to be stored
                 id = 1
@@ -81,12 +97,12 @@ def first_boot():
     )
     time.sleep(2)
     set_master_password()
-    datafile = open("./data.dat", "w").close()
+    datafile = open(DATA_FILE, "w").close()
 
 
 def showhelp():
     print("\nHere are the available commands:")
-    table = Table(box=box.MINIMAL_DOUBLE_HEAD, show_lines=True)
+    table = Table(box=box.ROUNDED, show_lines=True)
     table.add_column("command")
     table.add_column("description")
     for x in range(len(CMD_HELP)):
@@ -108,7 +124,8 @@ CMD_HELP = {
     "new": "Store a new password. Asks for a title (e.g. name of a site or service), password and optional notes.",
     "list": "Lists stored passwords. Doesnt display the actual password. (see '[bold]view[/bold]') ",
     "view <id/title>": "View a password in plaintext using its id or title. (e.g. view 3 or view )",
+    "rndpwd N": "Generate a random password of length N",
     "help": "Displays this help message.",
 }
 
-CMD_LIST = {"new": new_password, "list": list_passwords, "help": showhelp}
+CMD_LIST = {"new": new_password, "list": list_passwords, "help": showhelp, "rndpwd": random_password}
