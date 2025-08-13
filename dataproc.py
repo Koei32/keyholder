@@ -10,8 +10,7 @@ def load_data() -> bytes:
     with open(DATA_FILE, "+rb") as f:
         pdata = f.read()
     return pdata
-import string
-string.punctuation
+
 
 def write_data(data: bytes):
     """
