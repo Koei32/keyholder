@@ -2,13 +2,11 @@ from password_mgt import *
 import time
 from console import print, rule
 from rich.table import Table
-from password_mgt import get_password, get_title
+from password_mgt import get_password, get_title, valid_chars
 from dataproc import *
 from rich import box
 import random
-from string import ascii_letters, digits, punctuation
 
-elements = ascii_letters + digits + punctuation
 
 # view - view a password
 # new - create a new password
@@ -28,6 +26,8 @@ def login() -> bool:
     while attempts > 0:
         master_pwd = get_password("Master password: ")
         if auth(master_pwd):
+            global MASTER
+            MASTER = master_pwd
             return True
         else:
             print("Password is wrong!\n")
@@ -45,7 +45,7 @@ def random_password(size):
         return
 
     for i in range(size):
-        password += random.choice(elements)
+        password += random.choice(valid_chars)
     print(password)
 
 
@@ -77,17 +77,27 @@ def new_password():
         print("Cancelled new password creation.")
 
 
-def view(id):
+def view(*args):
+    if len(args) == 0:
+        print("[yellow]An id is required.[/yellow]")
+        return
+    id = args[0]
+
+
     master_pwd = get_password("Enter your master password: ")
     while not auth(master_pwd):
         print("Password is wrong! Try again.")
         master_pwd = get_password("Enter your master password: \r")
     stored_pwd_data = decrypt_data(load_data(), master_pwd)
-
-    print("\nThe password will auto-clear after 20 seconds.")
-    print(stored_pwd_data[int(id)][1], end="\r")
-    time.sleep(20)
-    print("hidden" + " "*(len(stored_pwd_data[int(id)][1]) - 6))
+    try:
+        print("\nThe password will auto-clear after 20 seconds. (Press Ctrl+C to clear manually)")
+        print("[bold green]" + stored_pwd_data[int(id)][1] + "[/]", end="\r")
+        time.sleep(20)
+        print(" "*(len(stored_pwd_data[int(id)][1]) + 1))
+        return
+    except KeyboardInterrupt:
+        print(" "*(len(stored_pwd_data[int(id)][1]) + 1))
+        return
 
 
 
@@ -102,13 +112,13 @@ def remove_password(id: int):
 
 def list_passwords():
     if len(load_data()) == 0:
-        print("No passwords stored.")
+        print("[yellow]No passwords stored.[/yellow]")
         return
-    master_pwd = get_password("Master password: ")
-    if not auth(master_pwd):
-        print("Invalid password")
-        return
-    pwd_data = decrypt_data(load_data(), master_pwd)
+    # master_pwd = get_password("Master password: ")
+    # if not auth(master_pwd):
+    #     print("Invalid password")
+    #     return
+    pwd_data = decrypt_data(load_data(), MASTER)
     table = Table(title="Stored passwords")
     table.add_column("id", style="white")
     table.add_column("title", style="cyan")
@@ -118,10 +128,7 @@ def list_passwords():
     for i in range(len(pwd_data)):
         # lord forgive me
         table.add_row(
-            str(list(pwd_data.keys())[i]) + ".",
-            list(pwd_data.values())[i][0],
-            "********",
-            list(pwd_data.values())[i][2],
+            str(list(pwd_data.keys())[i]) + ".", list(pwd_data.values())[i][0], "********", list(pwd_data.values())[i][2],
         )
     print(table)
 

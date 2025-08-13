@@ -4,10 +4,12 @@ from password_mgt import *
 from console import print, rule
 from commands import first_boot, CMD_LIST, login, command_processor, clear
 
+master = ""
 
 def main():
     # normal program loop here
     cmd = input("> ").lower().lstrip().rstrip()
+    print("after cmd input")
     if len(cmd) == 0:
         pass
     elif cmd.split()[0] in CMD_LIST:
