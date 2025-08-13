@@ -52,7 +52,7 @@ def list_passwords():
 
     for i in range(len(pwd_data)):
         # lord forgive me
-        table.add_row(str(list(pwd_data.keys())[i])+".", list(pwd_data.values())[i][0], "hidden", list(pwd_data.values())[i][2])
+        table.add_row(str(list(pwd_data.keys())[i])+".", list(pwd_data.values())[i][0], list(pwd_data.values())[i][1], list(pwd_data.values())[i][2])
     print(table)
 
 
@@ -85,7 +85,6 @@ def showhelp():
     for x in range(len(CMD_HELP)):
         table.add_row(list(CMD_HELP.keys())[x], list(CMD_HELP.values())[x])
     print(table)
-        
 
 # 1. new  : store a new password
 # 2. view : view your stored passwords (this is barebones and insecure for now)
