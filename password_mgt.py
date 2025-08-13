@@ -8,6 +8,7 @@ from secrets import compare_digest
 
 valid_chars = printable[:-6]
 
+
 def get_title() -> str:
     title = input("Title: ")
     if len(title) == 0:
@@ -16,7 +17,9 @@ def get_title() -> str:
     return title
 
 
-def get_password(prompt: str, check_validity: bool = False, confirm: bool = False) -> str:
+def get_password(
+    prompt: str, check_validity: bool = False, confirm: bool = False
+) -> str:
     pwd = getpass(prompt)
 
     if check_validity:
@@ -29,7 +32,7 @@ def get_password(prompt: str, check_validity: bool = False, confirm: bool = Fals
                 return get_password(prompt, check_validity, confirm)
             case 0:
                 pass
-    
+
     if confirm:
         cf_pwd = getpass("Confirm password: ")
         if pwd != cf_pwd:

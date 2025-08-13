@@ -18,7 +18,6 @@ def main():
         print('Unknown command (type "help" for a list of commands)')
 
 
-
 def test(id):
     t = input("Title: ")
     p = getpass()

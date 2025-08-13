@@ -11,6 +11,7 @@ from password_mgt import get_password, get_title
 from dataproc import *
 from rich import box
 
+
 def new_password():
     try:
         title = get_title()
@@ -38,6 +39,7 @@ def new_password():
     except KeyboardInterrupt:
         print("Cancelled new password creation.")
 
+
 def list_passwords():
     master_pwd = get_password("Master password: ")
     if not auth(master_pwd):
@@ -52,7 +54,12 @@ def list_passwords():
 
     for i in range(len(pwd_data)):
         # lord forgive me
-        table.add_row(str(list(pwd_data.keys())[i])+".", list(pwd_data.values())[i][0], list(pwd_data.values())[i][1], list(pwd_data.values())[i][2])
+        table.add_row(
+            str(list(pwd_data.keys())[i]) + ".",
+            list(pwd_data.values())[i][0],
+            list(pwd_data.values())[i][1],
+            list(pwd_data.values())[i][2],
+        )
     print(table)
 
 
@@ -86,6 +93,7 @@ def showhelp():
         table.add_row(list(CMD_HELP.keys())[x], list(CMD_HELP.values())[x])
     print(table)
 
+
 # 1. new  : store a new password
 # 2. view : view your stored passwords (this is barebones and insecure for now)
 # 3. help : view this help message
@@ -97,14 +105,10 @@ def showhelp():
 #     "help : Displays this help message."
 # ]
 CMD_HELP = {
-    "new" : "Store a new password. Asks for a title (e.g. name of a site or service), password and optional notes.",
-    "list" : "Lists stored passwords. Doesnt display the actual password. (see '[bold]view[/bold]') ",
-    "view <id/title>" : "View a password in plaintext using its id or title. (e.g. view 3 or view )",
-    "help" : "Displays this help message."
+    "new": "Store a new password. Asks for a title (e.g. name of a site or service), password and optional notes.",
+    "list": "Lists stored passwords. Doesnt display the actual password. (see '[bold]view[/bold]') ",
+    "view <id/title>": "View a password in plaintext using its id or title. (e.g. view 3 or view )",
+    "help": "Displays this help message.",
 }
 
-CMD_LIST = {
-    "new": new_password,
-    "list": list_passwords,
-    "help": showhelp
-}
+CMD_LIST = {"new": new_password, "list": list_passwords, "help": showhelp}
