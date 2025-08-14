@@ -19,7 +19,7 @@ def command_processor(cmd: str):
         CMD_LIST[cmd]()
 
 
-def login() -> bool:
+def login(*args) -> bool:
     print("Log in to continue.")
     attempts = 3
 
@@ -49,7 +49,7 @@ def random_password(size):
     print(password)
 
 
-def new_password():
+def new_password(*args):
     try:
         title = get_title()
         pwd = get_password("Enter new password: ", confirm=True)
@@ -89,35 +89,31 @@ def view(*args):
         print("Password is wrong! Try again.")
         master_pwd = get_password("Enter your master password: \r")
     stored_pwd_data = decrypt_data(load_data(), master_pwd)
-    try:
-        print("\nThe password will auto-clear after 20 seconds. (Press Ctrl+C to clear manually)")
-        print("[bold green]" + stored_pwd_data[int(id)][1] + "[/]", end="\r")
-        time.sleep(20)
-        print(" "*(len(stored_pwd_data[int(id)][1]) + 1))
-        return
-    except KeyboardInterrupt:
-        print(" "*(len(stored_pwd_data[int(id)][1]) + 1))
-        return
-
+    # abandoned the ctrl+c to clear idea
+    print("\nThe password will auto-clear after 20 seconds. (Press Ctrl+C to clear manually)")
+    print("[bold green]" + stored_pwd_data[int(id)][1] + "[/]", end="\r")
+    time.sleep(20)
+    print(" "*(len(stored_pwd_data[int(id)][1]) + 1))
 
 
 #wip
 def remove_password(id: int):
+    stored_pwd_data = decrypt_data(load_data(), MASTER)
+    if id not in stored_pwd_data.keys():
+        print(f"No password with id {id}.")
     master_pwd = get_password("Enter your master password: ")
     while not auth(master_pwd):
         print("Password is wrong! Try again.")
         master_pwd = get_password("Enter your master password: ")
     stored_pwd_data = decrypt_data(load_data(), master_pwd)
+    print(f"Successfully deleted password '{stored_pwd_data.pop(id)[0]}'")
 
 
-def list_passwords():
+
+def list_passwords(*args):
     if len(load_data()) == 0:
         print("[yellow]No passwords stored.[/yellow]")
         return
-    # master_pwd = get_password("Master password: ")
-    # if not auth(master_pwd):
-    #     print("Invalid password")
-    #     return
     pwd_data = decrypt_data(load_data(), MASTER)
     table = Table(title="Stored passwords")
     table.add_column("id", style="white")
@@ -154,7 +150,7 @@ def first_boot():
     datafile = open(DATA_FILE, "w").close()
 
 
-def showhelp():
+def showhelp(*args):
     print("\nHere are the available commands:")
     table = Table(box=box.ROUNDED, show_lines=True)
     table.add_column("command", style="green")
@@ -164,13 +160,13 @@ def showhelp():
     print(table)
 
 
-def exit():
+def exit(*args):
     clear()
     rule("[bold red]EXIT[/bold red]", style="bold red")
     quit()
 
 
-def clear():
+def clear(*args):
     os.system("cls || clear")
 
 
@@ -189,6 +185,7 @@ CMD_LIST = {
     "view": view,
     "help": showhelp,
     "rndpwd": random_password,
+    "remove": remove_password,
     "exit": exit,
     "quit": exit,
 }

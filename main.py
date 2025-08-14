@@ -9,7 +9,6 @@ master = ""
 def main():
     # normal program loop here
     cmd = input("> ").lower().lstrip().rstrip()
-    print("after cmd input")
     if len(cmd) == 0:
         pass
     elif cmd.split()[0] in CMD_LIST:
@@ -24,8 +23,13 @@ if __name__ == "__main__":
 
     if not PWD_FILE.is_file() and not DATA_FILE.is_file():
         # if we are here, this is the first run of the program
-        first_boot()
-    
+        try:
+            first_boot()
+        except KeyboardInterrupt:
+            print("[red]Quitting...[/red]")
+            quit()
+
+    # login
     try:
         logged_in = login()
     except KeyboardInterrupt:
@@ -36,6 +40,7 @@ if __name__ == "__main__":
         print("[red]Login failed.[/red]")
         quit()
     
+    # main
     try:
         clear()
         print("[green]Logged in successfully.[/green]")
