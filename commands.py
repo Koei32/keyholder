@@ -61,7 +61,7 @@ def new_password(*args):
             master_pwd = get_password("Enter your master password: ")
 
         with open(DATA_FILE, "rb") as f:
-            if len(f.read()) == 0:
+            if len(decrypt_data(load_data(), MASTER)) == 0:
                 # this is the first password to be stored
                 id = 1
                 password_obj = {id: (title, pwd, notes)}
@@ -73,6 +73,7 @@ def new_password(*args):
                 stored_data.update(password_obj)
                 new_pwd_data = encrypt_data(stored_data, master_pwd)
         write_data(new_pwd_data)
+        print(f"[green]Successfully stored password '{title}'[/green]")
     except KeyboardInterrupt:
         print("Cancelled new password creation.")
 
@@ -90,32 +91,37 @@ def view(*args):
         master_pwd = get_password("Enter your master password: \r")
     stored_pwd_data = decrypt_data(load_data(), master_pwd)
     # abandoned the ctrl+c to clear idea
-    print("\nThe password will auto-clear after 20 seconds. (Press Ctrl+C to clear manually)")
-    print("[bold green]" + stored_pwd_data[int(id)][1] + "[/]", end="\r")
-    time.sleep(20)
-    print(" "*(len(stored_pwd_data[int(id)][1]) + 1))
+    try:
+        print("\nThe password will auto-clear after 10 seconds.")
+        print("[bold green]" + stored_pwd_data[int(id)][1] + "[/]", end="\r")
+        time.sleep(10)
+        print(" "*(len(stored_pwd_data[int(id)][1]) + 1))
+    except:
+        clear()
+        print("Cleared console.")
 
 
 #wip
 def remove_password(id: int):
+    id = int(id)
     stored_pwd_data = decrypt_data(load_data(), MASTER)
-    if id not in stored_pwd_data.keys():
+    if id not in list(stored_pwd_data.keys()):
         print(f"No password with id {id}.")
     master_pwd = get_password("Enter your master password: ")
     while not auth(master_pwd):
         print("Password is wrong! Try again.")
         master_pwd = get_password("Enter your master password: ")
-    stored_pwd_data = decrypt_data(load_data(), master_pwd)
-    print(f"Successfully deleted password '{stored_pwd_data.pop(id)[0]}'")
+    print(f"[green]Successfully deleted password '[white]{stored_pwd_data.pop(id)[0]}[/white]'[/green]")
+    write_data(encrypt_data(stored_pwd_data, master_pwd))
 
 
 
 def list_passwords(*args):
-    if len(load_data()) == 0:
+    if len(decrypt_data(load_data(), MASTER)) == 0:
         print("[yellow]No passwords stored.[/yellow]")
         return
     pwd_data = decrypt_data(load_data(), MASTER)
-    table = Table(title="Stored passwords")
+    table = Table(title="Stored passwords", box=box.ROUNDED)
     table.add_column("id", style="white")
     table.add_column("title", style="cyan")
     table.add_column("password", style="green italic")
@@ -170,11 +176,27 @@ def clear(*args):
     os.system("cls || clear")
 
 
+"""
+                                     @@                
+                                @@@@@@@@@@@@           
+                              @@@@@@@@@@@@@@@@         
+                             @@@@@@@@@@@@@@@@@@        
+         @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       
+       @@@:                @@@@@@@@@@@@@@     @@       
+       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     @@       
+         @@@  @@@  @@@  @@@@@@@@@@@@@@@@@@@@@@@@       
+                             @@@@@@@@@@@@@@@@@@        
+                              @@@@@@@@@@@@@@@@         
+                                @@@@@@@@@@@@           
+                                     @@
+"""
+
+
 CMD_HELP = {
-    "new": "Store a new password. Asks for a title (e.g. name of a site or service), password and optional notes.",
     "list": "Lists stored passwords. Doesnt display the actual password. (see '[bold]view[/bold]') ",
-    "view [magenta]id/title[/magenta]": "View a password in plaintext using its id or title. (e.g. view 3 or view )",
-    "rndpwd [magenta]N[/magenta]": "Generate a random password of length N",
+    "new": "Store a new password. Asks for a title (e.g. name of a site or service), password and optional notes.",
+    "remove [magenta]id[/magenta]": "Remove a stored password using its id.",
+    "view [magenta]id/title[/magenta]": "View a password in plaintext using its id. (e.g. view 3 or view )",
     "help": "Displays this help message.",
     "exit [italic white]or[/italic white] quit": "Quit Keyholder."
 }
