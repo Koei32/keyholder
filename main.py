@@ -8,7 +8,7 @@ master = ""
 
 def main():
     # normal program loop here
-    cmd = input("> ").lower().lstrip().rstrip()
+    cmd = input("\n> ").lower().lstrip().rstrip()
     if len(cmd) == 0:
         pass
     elif cmd.split()[0] in CMD_LIST:

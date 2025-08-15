@@ -6,6 +6,7 @@ from password_mgt import get_password, get_title, valid_chars
 from dataproc import *
 from rich import box
 import random
+import datetime
 
 
 # view - view a password
@@ -82,8 +83,18 @@ def view(*args):
     if len(args) == 0:
         print("[yellow]An id is required.[/yellow]")
         return
-    id = args[0]
+    
+    try:
+        id = int(args[0])
+    except:
+        print("[yellow]Invalid id.[/yellow]")
+        return
+    
+    stored_pwd_data = decrypt_data(load_data(), MASTER)
 
+    if id not in list(stored_pwd_data.keys()):
+        print(f"No password with id {id}.")
+        return
 
     master_pwd = get_password("Enter your master password: ")
     while not auth(master_pwd):
@@ -93,27 +104,42 @@ def view(*args):
     # abandoned the ctrl+c to clear idea
     try:
         print("\nThe password will auto-clear after 10 seconds.")
-        print("[bold green]" + stored_pwd_data[int(id)][1] + "[/]", end="\r")
+        print("[bold green]" + stored_pwd_data[id][1] + "[/]", end="\r")
         time.sleep(10)
-        print(" "*(len(stored_pwd_data[int(id)][1]) + 1))
-    except:
+        print(" "*(len(stored_pwd_data[id][1]) + 1))
+    except KeyboardInterrupt:
         clear()
         print("Cleared console.")
 
 
 #wip
-def remove_password(id: int):
-    id = int(id)
+def remove_password(*args):
+    if len(args) == 0:
+        print("[yellow]An id is required.[/yellow]")
+        return
+    
+    try:
+        id = int(args[0])
+    except:
+        print("[yellow]Invalid id.[/yellow]")
+        return
+    
     stored_pwd_data = decrypt_data(load_data(), MASTER)
     if id not in list(stored_pwd_data.keys()):
         print(f"No password with id {id}.")
+        return
+    choice = input(f"Are you sure you want to delete the password [cyan]'{stored_pwd_data.pop(id)[0]}'[/cyan]? (Y/n): ")
+    if choice.lower() not in ["y", "n"]:
+        print("[yellow]Invalid choice.[yellow]")
+        return
+    if choice.lower() == "n":
+        return
     master_pwd = get_password("Enter your master password: ")
     while not auth(master_pwd):
         print("Password is wrong! Try again.")
         master_pwd = get_password("Enter your master password: ")
     print(f"[green]Successfully deleted password '[white]{stored_pwd_data.pop(id)[0]}[/white]'[/green]")
     write_data(encrypt_data(stored_pwd_data, master_pwd))
-
 
 
 def list_passwords(*args):
