@@ -2,11 +2,10 @@ from password_mgt import *
 import time
 from console import print, rule
 from rich.table import Table
-from password_mgt import get_password, get_title, valid_chars
+from password_mgt import get_password, get_title, VALID_CHARS
 from dataproc import *
-from rich import box
+from rich import box, prompt
 import random
-import datetime
 
 
 # view - view a password
@@ -46,7 +45,7 @@ def random_password(size):
         return
 
     for i in range(size):
-        password += random.choice(valid_chars)
+        password += random.choice(VALID_CHARS)
     print(password)
 
 
@@ -62,7 +61,7 @@ def new_password(*args):
             master_pwd = get_password("Enter your master password: ")
 
         with open(DATA_FILE, "rb") as f:
-            if len(decrypt_data(load_data(), MASTER)) == 0:
+            if len(load_data()) == 0 or len(decrypt_data(load_data(), MASTER)) == 0:
                 # this is the first password to be stored
                 id = 1
                 password_obj = {id: (title, pwd, notes)}
@@ -128,7 +127,7 @@ def remove_password(*args):
     if id not in list(stored_pwd_data.keys()):
         print(f"No password with id {id}.")
         return
-    choice = input(f"Are you sure you want to delete the password [cyan]'{stored_pwd_data.pop(id)[0]}'[/cyan]? (Y/n): ")
+    choice = prompt.Prompt.ask(f"Are you sure you want to delete the password [cyan]'{stored_pwd_data[id][0]}'[/cyan]? (Y/n)")
     if choice.lower() not in ["y", "n"]:
         print("[yellow]Invalid choice.[yellow]")
         return
@@ -143,7 +142,7 @@ def remove_password(*args):
 
 
 def list_passwords(*args):
-    if len(decrypt_data(load_data(), MASTER)) == 0:
+    if len(load_data()) == 0 or len(decrypt_data(load_data(), MASTER)) == 0:
         print("[yellow]No passwords stored.[/yellow]")
         return
     pwd_data = decrypt_data(load_data(), MASTER)
@@ -173,7 +172,6 @@ def first_boot():
     print(
         "Please make sure that the password you select is strong, unique and memorable."
     )
-    time.sleep(2)
     print(
         "!! [bold red]If you forget the master password, there is NO way to retrieve your stored passwords.[/bold red] !!"
     )
@@ -202,27 +200,12 @@ def clear(*args):
     os.system("cls || clear")
 
 
-"""
-                                     @@                
-                                @@@@@@@@@@@@           
-                              @@@@@@@@@@@@@@@@         
-                             @@@@@@@@@@@@@@@@@@        
-         @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       
-       @@@:                @@@@@@@@@@@@@@     @@       
-       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     @@       
-         @@@  @@@  @@@  @@@@@@@@@@@@@@@@@@@@@@@@       
-                             @@@@@@@@@@@@@@@@@@        
-                              @@@@@@@@@@@@@@@@         
-                                @@@@@@@@@@@@           
-                                     @@
-"""
-
 
 CMD_HELP = {
     "list": "Lists stored passwords. Doesnt display the actual password. (see '[bold]view[/bold]') ",
     "new": "Store a new password. Asks for a title (e.g. name of a site or service), password and optional notes.",
     "remove [magenta]id[/magenta]": "Remove a stored password using its id.",
-    "view [magenta]id/title[/magenta]": "View a password in plaintext using its id. (e.g. view 3 or view )",
+    "view [magenta]id/title[/magenta]": "View a password in plaintext using its id. (e.g. view 3)",
     "help": "Displays this help message.",
     "exit [italic white]or[/italic white] quit": "Quit Keyholder."
 }

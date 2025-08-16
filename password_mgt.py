@@ -10,9 +10,9 @@ from pathlib import Path
 
 PWD_FILE = Path("./pwd.dat")
 DATA_FILE = Path("./data.dat")
+VALID_CHARS = printable[:-6]
 
 
-valid_chars = printable[:-6]
 
 
 def get_title() -> str:
@@ -110,6 +110,6 @@ def check_password_validity(pwd: str) -> int:
     if len(pwd) < 8:
         return 1
     for chr in pwd:
-        if chr not in valid_chars:
+        if chr not in VALID_CHARS:
             return 2
     return 0

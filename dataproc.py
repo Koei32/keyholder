@@ -6,15 +6,17 @@ from password_mgt import PWD_FILE, DATA_FILE
 
 
 def load_data() -> bytes:
-    # load all dicts from data file(s)
+    """
+    Loads and returns data from datafile.
+    """
     with open(DATA_FILE, "+rb") as f:
-        pdata = f.read()
-    return pdata
+        data = f.read()
+    return data
 
 
 def write_data(data: bytes):
     """
-    writes `data` to datafile
+    Writes `data` to datafile.
     """
     with open(DATA_FILE, "+wb") as f:
         f.write(data)

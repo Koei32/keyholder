@@ -1,8 +1,7 @@
 import time
-from dataproc import *
-from password_mgt import *
+from password_mgt import DATA_FILE, PWD_FILE
 from console import print, rule
-from commands import first_boot, CMD_LIST, login, command_processor, clear
+from commands import first_boot, login, command_processor, clear, CMD_LIST
 
 master = ""
 
@@ -19,7 +18,6 @@ def main():
 
 if __name__ == "__main__":
     clear()
-    pwd_data = {}
 
     if not PWD_FILE.is_file() and not DATA_FILE.is_file():
         # if we are here, this is the first run of the program
@@ -47,7 +45,7 @@ if __name__ == "__main__":
         time.sleep(0.8)
         clear()
         rule("[bold violet]Keyholder[/bold violet]", style="violet")
-        print("\nWelcome! Type 'help' for help\n")
+        print("\nWelcome! Type 'help' for help")
         while True:
             main()
     except KeyboardInterrupt:
