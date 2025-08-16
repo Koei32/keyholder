@@ -10,22 +10,50 @@ Keyholder makes use of the [cryptography](https://github.com/pyca/cryptography/)
 I wrote this tool mostly for my personal use so its not the most feature loaded, but it is something. It supports securely adding, removing and viewing your stored passwords. The passwords are encrypted and then stored. <br>
 The tool uses a master password system to authenticate the user. **If you forget the master password, you lose _ALL_ your stored passwords.**
 
+## Getting Started
+You can find a build of Keyholder in the latest release. To run it just double click `keyholder.exe`.
+
+<br>To run Keyholder from source, follow these steps:
+1. Clone the repo
+   ```
+   git clone https://github.com/Koei32/keyholder
+   ```
+   
+2. Make a virtual environment and activate it
+   ```
+   python.exe -m venv venv
+   venv\Scripts\activate
+   ```
+   
+3. Install the required modules
+   ```
+   pip install -r requirements.txt
+   ```
+   
+4. Run Keyholder
+   ```
+   keyholder.py
+   ```
+
+
 ## Commands
 Here are some basic commands to get you started (you can type `help` to get the full list of commands):
 
 <details>
   <summary>new - Store a new password</summary>
   Running `new` asks you the title to give to the password, the password itself and optional notes.
+  <img src="https://files.catbox.moe/x84uhx.gif"/>
 </details>
 <details>
   <summary>list - Show a list of stored passwords</summary>
   Shows a list of the passwords stored in a table. This does not actually show the password in plaintext.
+   <img src="https://files.catbox.moe/5yv2b9.gif"/>
 </details>
 <details>
   <summary>view - View a password in plaintext</summary>
   Running <code>view ID</code> displays the password with id <code>ID</code> in plaintext for a few seconds.
+   <img src="https://files.catbox.moe/3mcnrg.gif"/>
 </details>
 
-## Examples
 
 
