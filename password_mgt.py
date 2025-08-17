@@ -27,7 +27,9 @@ def get_password(
     prompt: str, check_validity: bool = False, confirm: bool = False
 ) -> str:
     pwd = getpass(prompt)
-
+    if len(pwd) == 0:
+        print("Password cannot be empty")
+        return get_password(prompt, check_validity, confirm)
     if check_validity:
         match check_password_validity(pwd):
             case 1:
