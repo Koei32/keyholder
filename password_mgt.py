@@ -13,8 +13,6 @@ DATA_FILE = Path("./data.dat")
 VALID_CHARS = printable[:-6]
 
 
-
-
 def get_title() -> str:
     title = input("Title: ")
     if len(title) == 0:

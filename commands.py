@@ -82,17 +82,16 @@ def view(*args):
     if len(load_data()) == 0 or len(decrypt_data(load_data(), MASTER)) == 0:
         print(f"No passwords stored.")
         return
-    
+
     if len(args) == 0:
         print("[yellow]An id is required.[/yellow]")
         return
-    
+
     try:
         id = int(args[0])
     except:
         print("[yellow]Invalid id.[/yellow]")
         return
-    
 
     stored_pwd_data = decrypt_data(load_data(), MASTER)
 
@@ -110,13 +109,13 @@ def view(*args):
         print("\nThe password will auto-clear after 10 seconds.")
         print("[bold green]" + stored_pwd_data[id][1] + "[/]", end="\r")
         time.sleep(10)
-        print(" "*(len(stored_pwd_data[id][1]) + 1))
+        print(" " * (len(stored_pwd_data[id][1]) + 1))
     except KeyboardInterrupt:
         clear()
         print("Cleared console.")
 
 
-#wip
+# wip
 def remove_password(*args):
     if len(load_data()) == 0 or len(decrypt_data(load_data(), MASTER)) == 0:
         print(f"No passwords stored.")
@@ -125,18 +124,20 @@ def remove_password(*args):
     if len(args) == 0:
         print("[yellow]An id is required.[/yellow]")
         return
-    
+
     try:
         id = int(args[0])
     except:
         print("[yellow]Invalid id.[/yellow]")
         return
-    
+
     stored_pwd_data = decrypt_data(load_data(), MASTER)
     if id not in list(stored_pwd_data.keys()):
         print(f"No password with id {id}.")
         return
-    choice = prompt.Prompt.ask(f"Are you sure you want to delete the password [cyan]'{stored_pwd_data[id][0]}'[/cyan]? (Y/n)")
+    choice = prompt.Prompt.ask(
+        f"Are you sure you want to delete the password [cyan]'{stored_pwd_data[id][0]}'[/cyan]? (Y/n)"
+    )
     if choice.lower() not in ["y", "n"]:
         print("[yellow]Invalid choice.[yellow]")
         return
@@ -146,7 +147,9 @@ def remove_password(*args):
     while not auth(master_pwd):
         print("Password is wrong! Try again.")
         master_pwd = get_password("Enter your master password: ")
-    print(f"[green]Successfully deleted password '[white]{stored_pwd_data.pop(id)[0]}[/white]'[/green]")
+    print(
+        f"[green]Successfully deleted password '[white]{stored_pwd_data.pop(id)[0]}[/white]'[/green]"
+    )
     write_data(encrypt_data(stored_pwd_data, master_pwd))
 
 
@@ -164,7 +167,10 @@ def list_passwords(*args):
     for i in range(len(pwd_data)):
         # lord forgive me
         table.add_row(
-            str(list(pwd_data.keys())[i]) + ".", list(pwd_data.values())[i][0], "********", list(pwd_data.values())[i][2],
+            str(list(pwd_data.keys())[i]) + ".",
+            list(pwd_data.values())[i][0],
+            "********",
+            list(pwd_data.values())[i][2],
         )
     print(table)
 
@@ -198,7 +204,9 @@ def showhelp(*args):
         table.add_row(list(CMD_HELP.keys())[x], list(CMD_HELP.values())[x])
     print(table)
 
-#test
+
+# test
+
 
 def exit(*args):
     clear()
@@ -210,14 +218,13 @@ def clear(*args):
     os.system("cls || clear")
 
 
-
 CMD_HELP = {
     "list": "Lists stored passwords. Doesnt display the actual password. (see '[bold]view[/bold]') ",
     "new": "Store a new password. Asks for a title (e.g. name of a site or service), password and optional notes.",
     "remove [magenta]id[/magenta]": "Remove a stored password using its id.",
     "view [magenta]id/title[/magenta]": "View a password in plaintext using its id. (e.g. view 3)",
     "help": "Displays this help message.",
-    "exit [italic white]or[/italic white] quit": "Quit Keyholder."
+    "exit [italic white]or[/italic white] quit": "Quit Keyholder.",
 }
 
 CMD_LIST = {

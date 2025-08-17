@@ -6,6 +6,7 @@ import sys
 
 master = ""
 
+
 def main():
     # normal program loop here
     cmd = input("\n> ").lower().lstrip().rstrip()
@@ -34,11 +35,11 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("[red]Login cancelled by user.[/red]")
         sys.exit()
-    
+
     if not logged_in:
         print("[red]Login failed.[/red]")
         sys.exit()
-    
+
     # main
     try:
         clear()
