@@ -198,6 +198,7 @@ def showhelp(*args):
         table.add_row(list(CMD_HELP.keys())[x], list(CMD_HELP.values())[x])
     print(table)
 
+#test
 
 def exit(*args):
     clear()
