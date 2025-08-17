@@ -6,7 +6,7 @@ from password_mgt import get_password, get_title, VALID_CHARS
 from dataproc import *
 from rich import box, prompt
 import random
-
+import sys
 
 # view - view a password
 # new - create a new password
@@ -193,7 +193,7 @@ def showhelp(*args):
 def exit(*args):
     clear()
     rule("[bold red]EXIT[/bold red]", style="bold red")
-    quit()
+    sys.exit()
 
 
 def clear(*args):

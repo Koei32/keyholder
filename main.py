@@ -2,6 +2,7 @@ import time
 from password_mgt import DATA_FILE, PWD_FILE
 from console import print, rule
 from commands import first_boot, login, command_processor, clear, CMD_LIST
+import sys
 
 master = ""
 
@@ -25,18 +26,18 @@ if __name__ == "__main__":
             first_boot()
         except KeyboardInterrupt:
             print("[red]Quitting...[/red]")
-            quit()
+            sys.exit()
 
     # login
     try:
         logged_in = login()
     except KeyboardInterrupt:
         print("[red]Login cancelled by user.[/red]")
-        quit()
+        sys.exit()
     
     if not logged_in:
         print("[red]Login failed.[/red]")
-        quit()
+        sys.exit()
     
     # main
     try:
