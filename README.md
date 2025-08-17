@@ -17,6 +17,7 @@ You can find a build of Keyholder in the latest release. To run it just double c
 1. Clone the repo
    ```
    git clone https://github.com/Koei32/keyholder
+   cd keyholder
    ```
    
 2. Make a virtual environment and activate it
@@ -56,4 +57,5 @@ Here are some basic commands to get you started (you can type `help` to get the 
 </details>
 
 
-
+## End
+This project was made for submission to Hack Club's **Summer of Making 2025** ([link](https://summer.hackclub.com/projects/9491)). Thanks for viewing! \o
