@@ -74,6 +74,7 @@ def set_master_password():
     if pwd != cf_pwd:
         print("[bold red] Passwords do not match! [/bold red]")
         set_master_password()
+        return
 
     sha = sha256()
     salt = os.urandom(16)
