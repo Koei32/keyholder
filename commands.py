@@ -79,6 +79,10 @@ def new_password(*args):
 
 
 def view(*args):
+    if len(load_data()) == 0 or len(decrypt_data(load_data(), MASTER)) == 0:
+        print(f"No passwords stored.")
+        return
+    
     if len(args) == 0:
         print("[yellow]An id is required.[/yellow]")
         return
@@ -89,6 +93,7 @@ def view(*args):
         print("[yellow]Invalid id.[/yellow]")
         return
     
+
     stored_pwd_data = decrypt_data(load_data(), MASTER)
 
     if id not in list(stored_pwd_data.keys()):
@@ -113,6 +118,10 @@ def view(*args):
 
 #wip
 def remove_password(*args):
+    if len(load_data()) == 0 or len(decrypt_data(load_data(), MASTER)) == 0:
+        print(f"No passwords stored.")
+        return
+
     if len(args) == 0:
         print("[yellow]An id is required.[/yellow]")
         return
