@@ -89,6 +89,10 @@ def view(*args):
         print("[yellow]Invalid id.[/yellow]")
         return
     
+    if len(load_data()) == 0 or len(decrypt_data(load_data(), MASTER)) == 0:
+        print(f"No passwords stored.")
+        return
+
     stored_pwd_data = decrypt_data(load_data(), MASTER)
 
     if id not in list(stored_pwd_data.keys()):
