@@ -4,8 +4,6 @@ from console import print, rule
 from commands import first_boot, login, command_processor, clear, CMD_LIST
 import sys
 
-master = ""
-
 
 def main():
     # normal program loop here

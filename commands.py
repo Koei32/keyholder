@@ -13,6 +13,9 @@ import sys
 
 
 def command_processor(cmd: str):
+    """
+    Basic command parser. Runs the command `cmd` with any args it comes with.
+    """
     if len(cmd.split()) > 1:
         CMD_LIST[cmd.split()[0]](cmd.split()[1])
     else:
@@ -20,6 +23,12 @@ def command_processor(cmd: str):
 
 
 def login(*args) -> bool:
+    """
+    Performs the login procedure
+    ### Returns:
+    `True` if the login was successful.\n
+    `False` if the login was unsuccessful or cancelled.\n
+    """
     print("Log in to continue.")
     attempts = 3
 
@@ -34,7 +43,7 @@ def login(*args) -> bool:
             attempts -= 1
     return False
 
-
+# next ship
 def random_password(size):
     password = ""
 
@@ -50,6 +59,9 @@ def random_password(size):
 
 
 def new_password(*args):
+    """
+    Performs the new password entry procedure.
+    """
     try:
         title = get_title()
         pwd = get_password("Enter new password: ", confirm=True)
@@ -79,6 +91,9 @@ def new_password(*args):
 
 
 def view(*args):
+    """
+    Shows the stored password with passed id for 10 seconds.
+    """
     if len(load_data()) == 0 or len(decrypt_data(load_data(), MASTER)) == 0:
         print(f"No passwords stored.")
         return
@@ -117,6 +132,9 @@ def view(*args):
 
 # wip
 def remove_password(*args):
+    """
+    Removes stored password with passed id.
+    """
     if len(load_data()) == 0 or len(decrypt_data(load_data(), MASTER)) == 0:
         print(f"No passwords stored.")
         return
@@ -154,6 +172,9 @@ def remove_password(*args):
 
 
 def list_passwords(*args):
+    """
+    Lists all the stored passwords in a table.
+    """
     if len(load_data()) == 0 or len(decrypt_data(load_data(), MASTER)) == 0:
         print("[yellow]No passwords stored.[/yellow]")
         return
@@ -176,6 +197,9 @@ def list_passwords(*args):
 
 
 def first_boot():
+    """
+    Performs the first boot procedure.
+    """
     print(
         "\nWelcome to [bold violet]Keyholder[/bold violet]. This is your first boot of the app. Set a [bold]master password[/bold] to continue.\n"
     )
@@ -196,6 +220,9 @@ def first_boot():
 
 
 def showhelp(*args):
+    """
+    Prints the help table showing available commands.
+    """
     print("\nHere are the available commands:")
     table = Table(box=box.ROUNDED, show_lines=True)
     table.add_column("command", style="green")
@@ -209,12 +236,18 @@ def showhelp(*args):
 
 
 def exit(*args):
+    """
+    Exits the program.
+    """
     clear()
     rule("[bold red]EXIT[/bold red]", style="bold red")
     sys.exit()
 
 
 def clear(*args):
+    """
+    Clears the console.
+    """
     os.system("cls || clear")
 
 
